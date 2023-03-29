@@ -1,9 +1,5 @@
 import random
 
-# La fonction recherche_locale prend en entrée une solution initiale x_init et un nombre maximum
-# d itérations max_iterations. La fonction effectue une boucle de recherche locale en générant
-# une nouvelle solution voisine à chaque itération et en acceptant la nouvelle solution si elle
-# améliore le coût de la solution courante. La fonction renvoie la solution optimale trouvée.
 def recherche_locale(x_init, max_iterations):
     # Initialisation
     x = x_init

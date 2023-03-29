@@ -1,55 +1,26 @@
-import random
-import math
+import numpy as np
 
-# Données du problème
-villes = ["Casablanca", "Rabat", "Tanger", "Fès", "Marrakech"]
-distances = [[0, 87, 331, 293, 235],
-             [87, 0, 238, 186, 328],
-             [331, 238, 0, 310, 678],
-             [293, 186, 310, 0, 506],
-             [235, 328, 678, 506, 0]]
+def f(x):
+    return (x[0]-2)**2 + (x[1]-3)**2 + 4
 
-# Paramètres de l'algorithme
-temperature = 10000
-temperature_min = 1
-alpha = 0.99
-iterations_par_temperature = 100
+def recherche_recuit_simule(f, x0, T=100, alpha=0.95, min_T=1e-6):
+    x = x0
+    fx = f(x)
+    T_init = T
+    while T > min_T:
+        x_new = np.copy(x)
+        i = np.random.randint(0, len(x))
+        x_new[i] += np.random.normal(0, T)
+        fx_new = f(x_new)
+        df = fx_new - fx
+        if df < 0 or np.exp(-df/T) > np.random.rand():
+            x = x_new
+            fx = fx_new
+        T *= alpha
+    return x, fx
 
-# Fonction pour calculer la distance totale d'un itinéraire
-def calculer_distance(itineraire):
-    distance_totale = 0
-    for i in range(len(itineraire)-1):
-        ville_actuelle = itineraire[i]
-        ville_suivante = itineraire[i+1]
-        distance_totale += distances[ville_actuelle][ville_suivante]
-    distance_totale += distances[itineraire[-1]][itineraire[0]]
-    return distance_totale
-
-# Algorithme de recuit simulé
-itineraire_actuel = list(range(len(villes)))
-meilleur_itineraire = list(range(len(villes)))
-random.shuffle(itineraire_actuel)
-meilleur_distance = calculer_distance(itineraire_actuel)
-while temperature > temperature_min:
-    for i in range(iterations_par_temperature):
-        # Générer un itinéraire voisin en permutant deux villes
-        voisin = itineraire_actuel.copy()
-        i = random.randint(0, len(villes)-1)
-        j = random.randint(0, len(villes)-1)
-        voisin[i], voisin[j] = voisin[j], voisin[i]
-        # Calculer la différence de distance entre l'itinéraire voisin et l'itinéraire actuel
-        delta_distance = calculer_distance(voisin) - calculer_distance(itineraire_actuel)
-        # Accepter l'itinéraire voisin si il est meilleur ou avec une certaine probabilité si il est moins bon
-        if delta_distance < 0 or math.exp(-delta_distance/temperature) > random.random():
-            itineraire_actuel = voisin.copy()
-            distance_actuelle = calculer_distance(itineraire_actuel)
-            if distance_actuelle < meilleur_distance:
-                meilleur_itineraire = itineraire_actuel.copy()
-                meilleur_distance = distance_actuelle
-    temperature *= alpha
-
-# Afficher le résultat
-print("Meilleur itinéraire trouvé : ")
-for i in meilleur_itineraire:
-    print(villes[i])
-print("Distance totale parcourue : ", meilleur_distance)
+# exemple d'utilisation
+x0 = np.array([0, 0])
+x_min, f_min = recherche_recuit_simule(f, x0)
+print("minimum de f trouvé:", f_min)
+print("x qui minimise f:", x_min)

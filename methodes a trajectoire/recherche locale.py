@@ -1,6 +1,5 @@
 import random
 
-
 def recherche_locale(f, E):
     # Générer une solution initiale x0 dans E
     x0 = random.choice(E)
@@ -21,12 +20,10 @@ def recherche_locale(f, E):
 
     return x_best
 
-
 # Exemple d'utilisation
 def f(x):
     # Fonction à minimiser
     return x ** 2
-
 
 def N(x):
     # Voisinage de x : x-1, x+1
@@ -35,4 +32,4 @@ def N(x):
 
 E = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 x_min = recherche_locale(f, E)
-print("Minimum trouvé :", x_min, "f(", x_min, ") =", f(x_min))
+print("Minimum trouvé :", x_min, "\n \t \tf(", x_min, ") =", f(x_min))
